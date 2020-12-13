@@ -1,0 +1,103 @@
+---
+# tasks file for elastic1
+- name: Installing the Prerequisites for elastic search
+  apt:
+    name:
+      - java-11-openjdk-devel
+    state: present
+    update_cache: yes
+
+- name: Install Elastic Search Repo
+  yum_repository:
+    name: Elastic_7.X_repo
+    baseurl: https://artifacts.elastic.co/packages/7.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    enabled: yes
+    description: Elastic 7.x repo
+
+- name: Install Elasticsearch GPY Key
+  rpm_key:
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Install Elastic Search
+  yum:
+    name: elasticsearch
+    state: present
+    update_cache: yes
+
+- name: Update Config File
+  lineinfile:
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    regexp: 'network.host'
+    line: 'network.host: localhost'
+
+- name: Update Config File
+  lineinfile:
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    regexp: 'https.port:'
+    line: 'https.port: 9200'
+
+- name: Start Elasticsearch
+  service:
+    name: elasticsearch
+    state: started
+
+- name: Install logstash repo
+  yum_repository:
+    name: Elastic Repository for 7.x Packages
+    baseurl: https://artifacts.elastic.com/packages/7.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic.co/GPG-key-elasticsearch
+    enabled: yes
+    description: Elastic 7.x packages repo
+
+- name: Install Logstash
+  yum:
+    name: logstash
+    state: present
+    update_cache: yes
+
+- name: Update Config File
+  destfile: /etc/logstash/logstash.yml
+  regexp: 'http.host:'
+  line: 'https.host: 127.0.0.1'
+
+- name: Start Logstash
+  service:
+    name: logstash
+    state: started
+
+- name: Install Kibana Repo
+  yum_repository:
+    name: Kibana 7.x packages
+    baseurl: https://artifacts.elastic.co/packages/7.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic.com/GPG-KEY-elasticsearch
+    enabled: yes
+    description: Kibana-7.x
+
+- name: Install Kibana
+  yum:
+    name: kibana
+    state: present
+    update_cache: yes
+
+- name: Update Config File
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.host:'
+    line: 'server.host: 0.0.0.0'
+
+- name: Update Config File
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.port:'
+    line: 'server.port: 5601'
+
+- name: Start Kibana
+  service:
+    name: kibana
+    state: started
+
