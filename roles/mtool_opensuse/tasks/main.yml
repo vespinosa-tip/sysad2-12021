@@ -1,0 +1,12 @@
+---
+# tasks file for mtool_opensuse
+- name: install
+  zypper:
+    name: golang-github-prometheus-prometheus
+    state: latest
+    update_cache: yes
+
+- name: Start
+  service:
+    name: prometheus
+    state: started

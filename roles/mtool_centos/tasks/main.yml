@@ -1,0 +1,17 @@
+---
+# tasks file for mtool_centos
+- name: add
+  copy:
+    src: prometheus.repo
+    dest: /etc/yum/repos.d/
+
+- name: install
+  yum:
+    name: prometheus2
+    state: latest
+    update_cache: yes
+
+- name: Start
+  service:
+    name: prometheus
+    state: started
