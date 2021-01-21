@@ -1,0 +1,13 @@
+---
+# tasks file for roles/CentosDockerGroup
+- name: Creating docker Group
+  become: yes
+  group:
+    name: docker
+    state: present
+
+- name: Adding docker Group
+  become: yes
+  user:
+    name: espinosa
+    group: docker

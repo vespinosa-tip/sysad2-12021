@@ -1,0 +1,24 @@
+---
+# tasks file for roles/CentosDocker
+- name: Installing Docker in Ubuntu
+  become: yes
+  apt:
+    name:
+      - python
+      - python3-pip
+    state: present
+
+- name: Installing Docker file
+  become: yes
+  apt: 
+    name: docker.io
+    state: latest
+    update_cache: yes
+  register: docker
+
+- name: Installing Docker .py
+  become: yes
+  pip:
+    name: docker.py
+    state: latest
+  when: docker.changed
